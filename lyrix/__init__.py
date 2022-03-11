@@ -4,6 +4,7 @@ import coloredlogs
 import concurrent
 import json
 import re
+import numpy as np
 from collections import Counter
 from dotenv import dotenv_values
 
@@ -93,16 +94,20 @@ class Lyrix(SpotifyAPI):
         all_lyrics = self.get_all_lyrics(songs,artist_name)
         summary = self.summarise(all_lyrics)
         stats = self.calculate_stats(summary)
+        self.logger.info("")
+        self.logger.info("--- Statistics ---")
         self.logger.info(json.dumps(stats,indent=6))
         
     def calculate_stats(self,summary):
-        nwords = [s['nwords'] for s in summary['songs']]
+        nwords = np.array([s['nwords'] for s in summary['songs']])
         return {
-            'average':round(sum(nwords)/len(nwords)),
-            'min':min(nwords),
-            'min_song_name':summary['songs'][nwords.index(min(nwords))]['name'],
-            'max':max(nwords),
-            'min_song_name':summary['songs'][nwords.index(max(nwords))]['name'],
+            'nsongs':len(summary['songs']),
+            'average_number_of_words':round(nwords.mean(),2),
+            'std_number_of_words':round(nwords.std(),2),
+            'min_number_of_words':int(nwords.min()),
+            'min_song_name':summary['songs'][nwords.argmin()]['name'],
+            'max_number_of_words':int(nwords.max()),
+            'max_song_name':summary['songs'][nwords.argmax()]['name'],
         }
         
     def summarise(self,all_lyrics):
@@ -160,5 +165,6 @@ class Lyrix(SpotifyAPI):
         lyrics = res.json()['lyrics'] if res.status_code==200 else None
         if lyrics == None:
             self.logger.warning(f'failed to get lyrics for {song_name}')
+            return None
         self.logger.info(f'successfully got {song_name} for {artist_name}')
         return lyrics
