@@ -35,7 +35,7 @@ def find_songs(obj,artist):
 lyrix.add_command(search, "search")
 lyrix.add_command(find_songs, "find-songs")
 
-@click.group()
+@click.group(help="Commands that can be used to get/retrieve data")
 @click.pass_context
 def get(ctx):
     pass
