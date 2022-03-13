@@ -1,4 +1,3 @@
-#from .subcommands.info import info
 import click
 import json
 from lyrix import Lyrix
@@ -43,10 +42,10 @@ def get(ctx):
 @click.command(help="Command to get the average number of words in all songs, given an artist name")
 @click.option("--artist","-a",required=True,help="name of an artist")
 @click.pass_obj
-def average_n_words(obj,artist):
-    obj.calculate_average_n_words(artist)
+def statistics(obj,artist):
+    click.echo(json.dumps(obj.get(artist).stats,indent=6))
 
-get.add_command(average_n_words,'average-number-of-words')
+get.add_command(statistics,'statistics')
 
 lyrix.add_command(get, "get")
 #coconnect.add_command(airflow,'airflow')

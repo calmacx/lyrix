@@ -1,7 +1,7 @@
 import requests
 import logging
 import coloredlogs
-import concurrent
+import concurrent.futures
 import json
 import re
 import types
@@ -18,9 +18,6 @@ def notice(self, message, *args, **kws):
 logging.Logger.notice = notice
 
 
-m_headers = {
-    'Accept':'Application/json'
-}
 
 class Logger():
     @property
@@ -111,15 +108,37 @@ class SpotifyAPI(Logger):
 
 
 class LyricsAPI(Logger):
+    """
+    A simple class for the interacting with the API to retrieve lyrics
+    """
     def __init__(self):
+        """
+        Initialise the class, setting up the base URL and any headers to be used
+        """
+        #API base to hit
         self.__base_url = 'https://api.lyrics.ovh/v1'
         self.logger.info(f"Setup LyricsAPI with {self.__base_url}")
-                
+
+        #basic headers
+        self.__headers = {
+            'Accept':'Application/json'
+        }
+        
     def get_lyrics(self,artist_name,song_name):
+        """
+        Retrieve lyrics given an artist and song name
+
+        Args:
+          artist_name (str): the name of the artist
+          song_name (str): the name of the song
+        Returns:
+          str: the lyrics returned by the API, unaltered
+        """
+        
         url = f'{self.__base_url}/{artist_name}"/"{song_name}"'
         self.logger.debug(f'trying {url}')
         try:
-            res = requests.get(url=url,headers=m_headers)
+            res = requests.get(url=url,headers=self.__headers)
         except requests.exceptions.ConnectionError as e:
             self.logger.error(e)
             self.logger.error(f'failed to get a response for {song_name}')
