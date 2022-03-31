@@ -8,6 +8,31 @@ Lyrix used the Spotify API as a backend to retrieve songs of a given artist.
 
 Follow this README for a guide on how to use the CLI, for the python module - follow the `jupyter` notebook [provided here](https://github.com/calmacx/lyrix/blob/master/notebooks/Analysis.ipynb).
 
+## Source Code
+
+```
+.
+├── README.md 
+├── env_template 
+├── lyrix 
+│   ├── __init__.py 
+│   └── cli
+│       ├── __init__.py
+│       └── cli.py
+├── notebooks
+│   └── Analysis.ipynb
+├── requirements.txt
+└── setup.py
+```
+
+* `env_template` - template for environment variables to be stored in a .env file   
+* `lyrix/__init__.py` - source code defining the Lyrix class and functions that interact with the API and curate the data   
+* `cli/cli.py` - source code for the command line interface (`lyrix` command)
+* `notebooks` - folder containing jupter notebooks to show how to use the module to perform analysis
+* `requirements.txt` - python module dependancies 
+* `setup.py` - installation configuration for `pip` 
+
+
 ## Installation
 
 Get the source code:
